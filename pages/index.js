@@ -34,7 +34,14 @@ export default function Home() {
   const filter = e => {
     e.preventDefault();
 
-    //do something with filterValue
+    //if filter value is specified, search that. if not, return initial emojis
+    setDisplayedEmojis(
+      filterValue
+        ? emojis.filter(emoji => emoji[0] === filterValue)
+        : emojis.slice(0, page.size)
+    );
+
+    // do something with filterValue
   };
 
   return (
@@ -51,7 +58,7 @@ export default function Home() {
           <label htmlFor="">Filter By Name:</label>
           <input onChange={e => setFilterValue(e.target.value)} type="text" />
 
-          <button onClick={}>Filter</button>
+          <button onClick={filter}>Filter</button>
         </form>
 
         <div style={{ width: "400px", margin: "0 auto" }}>
