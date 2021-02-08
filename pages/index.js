@@ -37,7 +37,7 @@ export default function Home() {
     //if filter value is specified, search that. if not, return initial emojis
     setDisplayedEmojis(
       filterValue
-        ? emojis.filter(emoji => emoji[0] === filterValue)
+        ? emojis.filter(emoji => emoji[0].startsWith(filterValue))
         : emojis.slice(0, page.size)
     );
 
