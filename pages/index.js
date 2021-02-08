@@ -5,8 +5,10 @@ import { Pagination } from "react-bootstrap";
 
 export default function Home() {
   const [emojis, setEmojis] = useState([]);
-  const [page, setPage] = useState({ size: 10, number: 0 });
+  const [page, setPage] = useState({ size: 10, number: 0, controlSize: 5 });
   const [displayedEmojis, setDisplayedEmojis] = useState([]);
+
+  const [filterValue, setFilterValue] = useState("");
 
   useEffect(async () => {
     const octokit = new Octokit();
@@ -18,7 +20,8 @@ export default function Home() {
     setDisplayedEmojis(returnedEmojis.slice(0, page.size));
     setPage({
       size: page.size,
-      number: Math.ceil(returnedEmojis.length / page.size)
+      number: Math.ceil(returnedEmojis.length / page.size),
+      controlSize: page.controlSize
     });
   }, []);
 
@@ -26,6 +29,12 @@ export default function Home() {
     display: "flex",
     justifyContent: "space-between",
     gap: "80px"
+  };
+
+  const filter = e => {
+    e.preventDefault();
+
+    //do something with filterValue
   };
 
   return (
@@ -38,13 +47,13 @@ export default function Home() {
       <main>
         <h1> Flow Labs frontend interview</h1>
 
-        <Pagination>
-          <Pagination.First />
-          <Pagination.Prev />
+        <form action="">
+          <label htmlFor="">Filter By Name:</label>
+          <input onChange={e => setFilterValue(e.target.value)} type="text" />
 
-          <Pagination.Next />
-          <Pagination.Last />
-        </Pagination>
+          <button onClick={}>Filter</button>
+        </form>
+
         <div style={{ width: "400px", margin: "0 auto" }}>
           <div style={tableStyle}>
             <h3>Name</h3>
@@ -57,6 +66,21 @@ export default function Home() {
               <img src={emoji[1]} alt="" />
             </div>
           ))}
+          <Pagination
+            style={{
+              display: "inline-flex",
+              justifyContent: "center",
+              width: "100%"
+            }}
+          >
+            <Pagination.First />
+            <Pagination.Prev />
+
+            {/* todo: add in pagination logic*/}
+
+            <Pagination.Next />
+            <Pagination.Last />
+          </Pagination>
         </div>
       </main>
     </>
