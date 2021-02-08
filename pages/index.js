@@ -9,7 +9,7 @@ export default function Home() {
     const octokit = new Octokit();
     const response = await octokit.request("GET /emojis");
 
-    console.log(response);
+    setEmojis(Object.entries(response.data));
   }, []);
 
   return (
@@ -21,6 +21,14 @@ export default function Home() {
 
       <main>
         <h1> Flow Labs frontend interview</h1>
+        <div>
+          {emojis.map(emoji => (
+            <div>
+              <h3>{emoji[0]}</h3>
+              <img src={emoji[1]} alt="" />
+            </div>
+          ))}
+        </div>
       </main>
     </>
   );
