@@ -25,29 +25,37 @@ export default function Home() {
     setNumberPages(Math.ceil(returnedEmojis.length / pageSize));
   }, []);
 
+  const clickPage = number => {
+    console.log(number);
+    setCurrentPage(number);
+    setDisplayedEmojis(
+      emojis.slice((number - 1) * pageSize),
+      number * pageSize
+    );
+  };
+
   const paginate = index => {
     const controlLimit = index + pageControlSize;
 
     const limit = controlLimit >= numberPages ? numberPages : controlLimit;
 
-    console.log(index);
-    console.log(limit);
-
     const pageControls = [];
     while (index < limit) {
       const control = (
-        <Pagination.Item active={index === currentPage ? true : false}>
+        <Pagination.Item
+          active={index === currentPage ? true : false}
+          onClick={() => clickPage(index)}
+        >
           {index}
         </Pagination.Item>
+
+        //<Pagination.Ellipsis />
       );
 
       pageControls.push(control);
       index++;
     }
 
-    console.log(pageControls);
-
-    // setCurrentPage(currentPage);
     return pageControls;
   };
 
@@ -67,6 +75,8 @@ export default function Home() {
     justifyContent: "space-between",
     gap: "80px"
   };
+
+  console.log(displayedEmojis);
 
   return (
     <>
@@ -117,17 +127,3 @@ export default function Home() {
     </>
   );
 }
-
-/*
-<Pagination.Item>{1}</Pagination.Item>
-<Pagination.Ellipsis />
-
-<Pagination.Item>{10}</Pagination.Item>
-<Pagination.Item>{11}</Pagination.Item>
-<Pagination.Item active>{12}</Pagination.Item>
-<Pagination.Item>{13}</Pagination.Item>
-<Pagination.Item disabled>{14}</Pagination.Item>
-
-<Pagination.Ellipsis />
-<Pagination.Item>{20}</Pagination.Item>
-*/
