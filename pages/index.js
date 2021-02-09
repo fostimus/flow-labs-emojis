@@ -5,7 +5,11 @@ import { Pagination } from "react-bootstrap";
 
 export default function Home() {
   const [emojis, setEmojis] = useState([]);
-  const [page, setPage] = useState({ size: 10, number: 0, controlSize: 5 });
+  const [pageSize, setPageSize] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [numberPages, setNumberPages] = useState(0);
+  const [pageControlSize, setPageControlSize] = useState(5);
+
   const [displayedEmojis, setDisplayedEmojis] = useState([]);
 
   const [filterValue, setFilterValue] = useState("");
@@ -17,18 +21,34 @@ export default function Home() {
     const returnedEmojis = Object.entries(response.data);
 
     setEmojis(returnedEmojis);
-    setDisplayedEmojis(returnedEmojis.slice(0, page.size));
-    setPage({
-      size: page.size,
-      number: Math.ceil(returnedEmojis.length / page.size),
-      controlSize: page.controlSize
-    });
+    setDisplayedEmojis(returnedEmojis.slice(0, pageSize));
+    setNumberPages(Math.ceil(returnedEmojis.length / pageSize));
   }, []);
 
-  const tableStyle = {
-    display: "flex",
-    justifyContent: "space-between",
-    gap: "80px"
+  const paginate = index => {
+    const controlLimit = index + pageControlSize;
+
+    const limit = controlLimit >= numberPages ? numberPages : controlLimit;
+
+    console.log(index);
+    console.log(limit);
+
+    const pageControls = [];
+    while (index < limit) {
+      const control = (
+        <Pagination.Item active={index === currentPage ? true : false}>
+          {index}
+        </Pagination.Item>
+      );
+
+      pageControls.push(control);
+      index++;
+    }
+
+    console.log(pageControls);
+
+    // setCurrentPage(currentPage);
+    return pageControls;
   };
 
   const filter = e => {
@@ -40,8 +60,12 @@ export default function Home() {
         ? emojis.filter(emoji => emoji[0].startsWith(filterValue))
         : emojis.slice(0, page.size)
     );
+  };
 
-    // do something with filterValue
+  const tableStyle = {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: "80px"
   };
 
   return (
@@ -51,10 +75,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <h1> Flow Labs frontend interview</h1>
+      <main style={{ display: "flex", flexDirection: "column", gap: "30px" }}>
+        <h1 className="text-center"> Flow Labs frontend interview</h1>
 
-        <form action="">
+        <form className="text-center" action="">
           <label htmlFor="">Filter By Name:</label>
           <input onChange={e => setFilterValue(e.target.value)} type="text" />
 
@@ -83,7 +107,7 @@ export default function Home() {
             <Pagination.First />
             <Pagination.Prev />
 
-            {/* todo: add in pagination logic*/}
+            {paginate(1)}
 
             <Pagination.Next />
             <Pagination.Last />
